@@ -17,17 +17,17 @@ dependencies = [
     "imageio>=2.36.1",
     "jax[cuda12]==0.5.0",
     "jaxtyping==0.2.36",
-    "lerobot",
+    "zarr==2.17.0",
+    "numcodecs==0.14.0",
+    # "lerobot", <-- need to install manually
     "ml_collections==1.0.0",
-    "numpy>=1.26.4",
-    "numpydantic>=1.6.6",
+     "numpydantic>=1.6.6",
     "opencv-python>=4.10.0.84",
     "openpi-client",
     "orbax-checkpoint==0.11.1",
     "pillow>=11.0.0",
-    "s3fs>=2024.9.0",
+    "s3fs==2024.9.0",
     "sentencepiece>=0.2.0",
-    "torch>=2.5.1",
     "tqdm-loggable>=0.2",
     "typing-extensions>=4.12.2",
     "tyro>=0.9.5",
@@ -38,6 +38,8 @@ dependencies = [
     "beartype>=0.19.0",
     "treescope>=0.1.7",
     "transformers==4.48.1",
+    "pydantic==2.10.6",
+    "beartype==0.19.0",
 ]
 
 
