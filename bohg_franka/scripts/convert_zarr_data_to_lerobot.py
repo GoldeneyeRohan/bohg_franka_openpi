@@ -27,11 +27,21 @@ from pathlib import Path
 from lerobot.common.datasets.lerobot_dataset import LEROBOT_HOME
 from lerobot.common.datasets.lerobot_dataset import LeRobotDataset
 import tyro
+# result = {
+#         “train_idx”: np.where(dataset.train_mask)[0],
+#         “val_idx”: np.where(dataset.val_mask)[0],
+#         “holdout_idx”: np.where(dataset.holdout_mask)[0],
+#     }
 
 class DPEpisodeDataset:
-    def __init__(self, path, remap_config):
+    def __init__(self, path, remap_config, exclude_episodes=None):
         self.path = path
         self._load_dataset()
+        self.train_idx = None
+        if exclude_episodes is not None:
+            self.train_idx = exclude_episodes["train_idx"]
+
+        exclude_episodes = np.load()
         self.image_remapping = remap_config["image"]
         self.proprio_remapping = remap_config["proprio"]
         self.action_remapping = remap_config["action"]
@@ -63,6 +73,11 @@ class DPEpisodeDataset:
     def episode_ends(self):
         return self.meta["episode_ends"]
     
+    def is_valid(self, episode_idx):
+        if self.train_idx is not None:
+            return episode_idx in self.train_idx
+        return True
+    
     def aggregate_episode(self, episode):
         agged_episode = {}
         for key, value in self.image_remapping.items():
@@ -93,7 +108,7 @@ class DPEpisodeDataset:
             result[key] = x
         return result
 
-def main(data_path:str, output_path:str, task_name:str, remap_config:str, *, cmd_freq:int = 10, push_to_hub:bool = False):
+def main(data_path:str, output_path:str, task_name:str, remap_config:str, exclude_file:str = None, *, cmd_freq:int = 10, push_to_hub:bool = False):
     # Clean up any existing dataset in the output directory
     output_path = Path(output_path) / task_name
     if output_path.exists():
@@ -101,10 +116,14 @@ def main(data_path:str, output_path:str, task_name:str, remap_config:str, *, cmd
 
     with open(remap_config, "r") as f:
         remapping = yaml.safe_load(f)
+    if exclude_file is not None:
+        exclude_episodes = np.load(exclude_file)
+    else:
+        exclude_episodes = None
     
     # load the raw dataset:
     print("Loading raw dataset...")
-    raw_dataset = DPEpisodeDataset(data_path, remapping)
+    raw_dataset = DPEpisodeDataset(data_path, remapping, exclude_episodes=exclude_episodes)
     dummy_episode, ep_len = raw_dataset.get_episode(0)
     print(f"Loaded {raw_dataset.num_episodes}.")
 
@@ -145,10 +164,11 @@ def main(data_path:str, output_path:str, task_name:str, remap_config:str, *, cmd
     # Loop over raw Libero datasets and write episodes to the LeRobot dataset
     # You can modify this for your own data format
     for episode_idx in tqdm.tqdm(range(raw_dataset.num_episodes)):
-        episode, ep_len = raw_dataset.get_episode(episode_idx)
-        for i in range(ep_len):
-            dataset.add_frame({key: value[i] for key, value in episode.items()})
-        dataset.save_episode(task=raw_dataset.language_instruction)
+        if raw_dataset.is_valid(episode_idx):
+            episode, ep_len = raw_dataset.get_episode(episode_idx)
+            for i in range(ep_len):
+                dataset.add_frame({key: value[i] for key, value in episode.items()})
+            dataset.save_episode(task=raw_dataset.language_instruction)
 
     # Consolidate the dataset, skip computing stats since we will do that later
     dataset.consolidate(run_compute_stats=False)
