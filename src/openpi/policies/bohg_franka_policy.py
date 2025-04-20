@@ -7,7 +7,7 @@ from openpi import transforms
 from openpi.models import model as _model
 
 
-def make_libero_example() -> dict:
+def make_bohg_franka_example() -> dict:
     """Creates a random input example for the bohg franka policy."""
     return {
         "observation/state": np.random.rand(8),
