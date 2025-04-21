@@ -27,11 +27,6 @@ from pathlib import Path
 from lerobot.common.datasets.lerobot_dataset import LEROBOT_HOME
 from lerobot.common.datasets.lerobot_dataset import LeRobotDataset
 import tyro
-# result = {
-#         “train_idx”: np.where(dataset.train_mask)[0],
-#         “val_idx”: np.where(dataset.val_mask)[0],
-#         “holdout_idx”: np.where(dataset.holdout_mask)[0],
-#     }
 
 class DPEpisodeDataset:
     def __init__(self, path, remap_config, exclude_episodes=None):
@@ -41,7 +36,6 @@ class DPEpisodeDataset:
         if exclude_episodes is not None:
             self.train_idx = exclude_episodes["train_idx"]
 
-        exclude_episodes = np.load()
         self.image_remapping = remap_config["image"]
         self.proprio_remapping = remap_config["proprio"]
         self.action_remapping = remap_config["action"]
@@ -116,6 +110,7 @@ def main(data_path:str, output_path:str, task_name:str, remap_config:str, exclud
 
     with open(remap_config, "r") as f:
         remapping = yaml.safe_load(f)
+
     if exclude_file is not None:
         exclude_episodes = np.load(exclude_file)
     else:

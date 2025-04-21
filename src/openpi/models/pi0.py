@@ -139,6 +139,37 @@ class Pi0Config(_model.BaseModelConfig):
         if not filters:
             return nnx.Nothing
         return nnx.All(*filters)
+    
+    def get_action_head_only_freeze_filter(self) -> nnx.filterlib.Filter:
+        """Returns the freeze filter based on the model config."""
+        filters = []
+        has_lora = False
+        gemma_params_filter = nnx_utils.PathRegex(".*llm.*")
+        action_expert_params_filter = nnx_utils.PathRegex(".*llm.*_1.*")
+        # always freeze paligemma
+        filters.append(
+            gemma_params_filter,
+        )
+        if "lora" not in self.action_expert_variant:
+            # If only freeze gemma params, exclude action expert params.
+            filters.append(
+                nnx.Not(action_expert_params_filter),
+            )
+        elif "lora" in self.action_expert_variant:
+            # filters.append(
+            #     action_expert_params_filter,
+            # )
+            has_lora = True
+
+        if has_lora:
+            # If any lora is used, exclude all lora params.
+            filters.append(
+                nnx.Not(nnx_utils.PathRegex(".*lora.*")),
+            )
+        # import pdb; pdb.set_trace()
+        if not filters:
+            return nnx.Nothing
+        return nnx.All(*filters)
 
 
 class Pi0(_model.BaseModel):

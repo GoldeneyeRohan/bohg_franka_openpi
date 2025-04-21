@@ -6,4 +6,5 @@ proprio:
   - "robot0_gripper_qpos"
 action:
   - "action"
-language_instruction: "tie the cleat"
+# language_instruction: "tie the cleat"
+language_instruction: "pick up the red rope, then tie a figure 8"
