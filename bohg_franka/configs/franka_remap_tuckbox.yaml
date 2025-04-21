@@ -1,0 +1,10 @@
+image:
+  image: "agentview_image"
+proprio:
+  - "robot0_eef_pos"
+  - "robot0_eef_quat"
+  - "robot0_gripper_qpos"
+action:
+  - "action"
+# language_instruction: "tie the cleat"
+language_instruction: "move the box underneath the shelf"

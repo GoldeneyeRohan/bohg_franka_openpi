@@ -460,7 +460,7 @@ class TrainConfig:
     # If the value is greater than 1, FSDP will be enabled and shard across number of specified devices; overall
     # device memory will be reduced but training could potentially be slower.
     # eg. if total device is 4 and fsdp devices is 2; then the model will shard to 2 devices and run
-    # data parallel between 2 groups of devices.
+    # data parallel between 2 groups of deices.
     fsdp_devices: int = 1
 
     @property
@@ -744,6 +744,30 @@ _CONFIGS = [
         ).get_action_head_only_freeze_filter(),
         # Turn off EMA for LoRA finetuning.
         ema_decay=None,
+    ),
+    TrainConfig(
+        name="pi0_tuckbox_low_mem_action_head_finetune",
+        # Here is an example of loading a pi0 model for LoRA fine-tuning.
+        model=pi0.Pi0Config(paligemma_variant="gemma_2b", action_expert_variant="gemma_300m_lora"),
+        data=LeRobotBohgFrankaDataConfig(
+            repo_id="tuckbox_train",
+            base_config=DataConfig(
+                local_files_only=True,  # Set to True for local-only datasets.
+                prompt_from_task=True,
+            ),
+        ),
+        weight_loader=weight_loaders.CheckpointWeightLoader("s3://openpi-assets/checkpoints/pi0_base/params"),
+        num_train_steps=15_000,
+        # The freeze filter defines which parameters should be frozen during training.
+        # We have a convenience function in the model config that returns the default freeze filter
+        # for the given model config for LoRA finetuning. Just make sure it matches the model config
+        # you chose above.
+        freeze_filter=pi0.Pi0Config(
+            paligemma_variant="gemma_2b", action_expert_variant="gemma_300m_lora"
+        ).get_action_head_only_freeze_filter(),
+        # Turn off EMA for LoRA finetuning.
+        ema_decay=None,
+        checkpoint_base_dir="/juno/u/rhnsinha/Projects/pi0_checkpoints"
     ),
     #
     # Debugging configs.
