@@ -7,4 +7,4 @@ proprio:
 action:
   - "action"
 # language_instruction: "tie the cleat"
-language_instruction: "move the box underneath the shelf"
+language_instruction: "move the blue box underneath the white shelf"

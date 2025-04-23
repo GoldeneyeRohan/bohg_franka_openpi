@@ -144,12 +144,17 @@ class Pi0Config(_model.BaseModelConfig):
         """Returns the freeze filter based on the model config."""
         filters = []
         has_lora = False
+        siglip_params_filter = nnx_utils.PathRegex(".*img.*")
         gemma_params_filter = nnx_utils.PathRegex(".*llm.*")
         action_expert_params_filter = nnx_utils.PathRegex(".*llm.*_1.*")
         # always freeze paligemma
         filters.append(
-            gemma_params_filter,
+            gemma_params_filter
         )
+        filters.append(
+            siglip_params_filter
+        )
+        filters = [nnx.Any(*filters)]
         if "lora" not in self.action_expert_variant:
             # If only freeze gemma params, exclude action expert params.
             filters.append(
