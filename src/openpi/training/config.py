@@ -937,7 +937,7 @@ _CONFIGS = [
         ).get_freeze_filter(),
         # Turn off EMA for LoRA finetuning.
         ema_decay=None,
-        # checkpoint_base_dir="/juno/u/rhnsinha/Projects/pi0_checkpoints"
+        checkpoint_base_dir="/juno/u/rhnsinha/Projects/pi0_checkpoints"
     ),
     TrainConfig(
         name="pi0_tuckbox_selected_low_mem_finetune",
