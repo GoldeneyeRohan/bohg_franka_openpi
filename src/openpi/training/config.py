@@ -432,7 +432,7 @@ class TrainConfig:
     # Random seed that will be used by random generators during training.
     seed: int = 42
     # Global batch size.
-    batch_size: int = 32
+    batch_size: int = 16
     # Number of workers to use for the data loader. Increasing this number will speed up data loading but
     # will increase memory and CPU usage.
     num_workers: int = 2
@@ -937,7 +937,7 @@ _CONFIGS = [
         ).get_freeze_filter(),
         # Turn off EMA for LoRA finetuning.
         ema_decay=None,
-        # checkpoint_base_dir="/juno/u/rhnsinha/Projects/pi0_checkpoints"
+        checkpoint_base_dir="/juno/u/rhnsinha/Projects/pi0_checkpoints"
     ),
     TrainConfig(
         name="pi0_tuckbox_selected_low_mem_finetune",
