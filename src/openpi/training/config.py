@@ -790,6 +790,7 @@ _CONFIGS = [
         ).get_freeze_filter(),
         # Turn off EMA for LoRA finetuning.
         ema_decay=None,
+        checkpoint_base_dir="/juno/u/rhnsinha/Projects/pi0_checkpoints"
     ),
     TrainConfig(
         name="pi0_figure_8_cupid_selected_transfer_low_mem_finetune",
@@ -813,6 +814,7 @@ _CONFIGS = [
         ).get_freeze_filter(),
         # Turn off EMA for LoRA finetuning.
         ema_decay=None,
+        checkpoint_base_dir="/juno/u/rhnsinha/Projects/pi0_checkpoints"
     ),
     TrainConfig(
         name="pi0_figure_8_selection_base_low_mem_finetune",
