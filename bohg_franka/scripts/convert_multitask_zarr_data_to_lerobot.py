@@ -106,11 +106,15 @@ def get_task_dataset_paths(task_config, setting="base", ablation="base"):
     base_path = task_config["data_path"]
     data_file = base_path + task_config["data_file"]
     language_instruction = task_config["language_instruction"]
+    if "filter_file_path" in task_config:
+        filter_file_path = task_config["filter_file_path"]
+    else:
+        filter_file_path = base_path
     if setting == "base":
         filter_file = task_config["filter_files"][setting]
     else:
         filter_file = task_config["filter_files"][setting][ablation]
-    filter_file = base_path + filter_file
+    filter_file = filter_file_path + filter_file
     return language_instruction, data_file, filter_file
 
 def main(remap_config:str, output_path:str, task_name:str, setting:str, ablation:str, *, cmd_freq:int = 10, push_to_hub:bool = False):
