@@ -1,0 +1,37 @@
+remapping:
+  image:
+    image: "agentview_image"
+  proprio:
+    - "robot0_eef_pos"
+    - "robot0_eef_quat"
+    - "robot0_gripper_qpos"
+  action:
+    - "action"
+# language_instruction: "tie the cleat"
+
+tasks:
+  figure8:
+    language_instruction: "pick up the red rope, then tie a figure 8"
+    data_path: "/home/rohan/Projects/data_attribution/data/figure8_v4/mh/"
+    data_file: "converted.hdf5.zarr.zip"
+    filter_files: 
+      base: null
+      selection:
+        base: "figure8_v4-base-selection.npz"
+        curated: "figure8_v4-curation_influence_sum-filter_0.00-select_0.33.npz" # use CUPID
+      filter:
+        base: "figure8_v4-base-filtering.npz"
+        curated: "figure8_v4-curation_influence_sum-filter_0.66-select_0.00.npz" # use CUPID
+  tuckbox:
+    language_instruction: "move the blue box underneath the white shelf"
+    data_path: "/home/rohan/Projects/data_attribution/data/tuckbox/mh/"
+    data_file: "converted.hdf5.zarr.zip"
+    filter_files: 
+      base: null
+      selection:
+        base: "tuckbox_v3-base-selection.npz"
+        curated: "tuckbox_v3-curation_influence_sum-filter_0.00-select_0.33.npz" # use CUPID
+      filter:
+        base: "tuckbox_v3-base-filtering.npz"
+        curated: "tuckbox_v3-curation_influence_sum-filter_0.66-select_0.00.npz" # use CUPID
+      
