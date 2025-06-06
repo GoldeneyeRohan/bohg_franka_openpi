@@ -20,7 +20,7 @@ tasks:
         base: "figure8_v4-base-selection.npz"
         curated: "figure8_v4-curation_influence_sum-filter_0.00-select_0.33.npz" # use CUPID
       filter:
-        base: "figure8_v4-base-filtering.npz"
+        base: "figure8_v4.npz"
         curated: "figure8_v4-curation_influence_sum-filter_0.66-select_0.00.npz" # use CUPID
   tuckbox:
     language_instruction: "move the blue box underneath the white shelf"
